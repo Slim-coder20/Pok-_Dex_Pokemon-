@@ -1,6 +1,9 @@
+import Logo from "../components/Logo/Logo";
+
 export default function About() {
     return (
         <div>
+            <Logo />
             <h1 className="text-3xl font-semibold text-center mb-10">
                 À Propos
             </h1>
@@ -16,7 +19,7 @@ export default function About() {
                 l’histoire du jeu vidéo.
                 <br />
                 <br />
-                La franchise est également exploitée sous forme d'anime, de
+                La franchise est également exploitée sous forme d anime, de
                 mangas, et de jeux de cartes à collectionner. Dans la série
                 animée homonyme, le personnage principal, Sacha, voyage à
                 travers diverses régions fictives dans le but d’attraper de
@@ -24,7 +27,7 @@ export default function About() {
                 également dans les jeux vidéo de la franchise. Pokémon a eu un
                 impact culturel très important dans les pays où il a été
                 introduit, dont le Japon, les États-Unis, le Canada, la France
-                et d'autres pays européens.
+                et d autres pays européens.
             </div>
         </div>
     );
