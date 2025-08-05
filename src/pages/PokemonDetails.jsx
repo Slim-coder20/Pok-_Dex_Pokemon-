@@ -63,9 +63,15 @@ export default function PokemonDetails() {
       }
 
       const data = await response.json();
-      // if  pokemon is in my created pokemons, add the id // 
-      if(isNaN(id)) {
-        data.id = id; 
+
+      // Vérifier que les données sont valides
+      if (!data || typeof data !== "object" || data === true) {
+        throw new Error("Pokemon non trouvé ou données invalides");
+      }
+
+      // if pokemon is in my created pokemons, add the id //
+      if (isNaN(id)) {
+        data.id = id;
       }
       setPokemon(data);
       setLoading(false);
@@ -152,6 +158,25 @@ export default function PokemonDetails() {
         });
       }
     });
+    // Update on Firebase :
+    const response = await fetch(
+      `https://pokedex-c9ed6-default-rtdb.europe-west1.firebasedatabase.app/pokemons/${id}.json`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPokemon),
+      }
+    );
+    // Vérifier pour les erreurs //
+    if (!response.ok) {
+      return;
+    }
+    // fermer la modale //
+    setUpdatePokemon(false);
+    setLoading(false);
+    fetchPokemon();
   };
   const onDeletePokemonHandler = async () => {
     // Delete
