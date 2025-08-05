@@ -11,28 +11,12 @@ export default function Home() {
   const fetchPokemons = async (add = false) => {
     setLoading(true);
     toast("Chargement...");
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?limit=30${
-        add && "&offset=" + pokemons.length
-      }`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    // affichage de notification d'erreur en utilisant toast //
-    if (!response.ok) {
-      toast.error("Une erreur est survenu !");
-      setLoading(false);
-    }
 
-    const data = await response.json();
-    // Pour chaque Pokemon, récupérer les détails :
-    const promises = data.results.map(async (pokemon) => {
+    try {
       const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`,
+        `https://pokeapi.co/api/v2/pokemon?limit=30${
+          add && "&offset=" + pokemons.length
+        }`,
         {
           method: "GET",
           headers: {
@@ -40,14 +24,85 @@ export default function Home() {
           },
         }
       );
-      return await response.json();
-    });
-    const pokemonDetails = await Promise.all(promises);
-    setPokemons([...pokemons, ...pokemonDetails]); // Mettre à jour l'état
-    setLoading(false);
-    toast(
-      add ? "Nouveaux Pokémons attrapés !" : "Premiers Pokémons attrapés !"
-    );
+
+      // affichage de notification d'erreur en utilisant toast //
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Pour chaque Pokemon, récupérer les détails :
+      const promises = data.results.map(async (pokemon) => {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return await response.json();
+      });
+      const pokemonDetails = await Promise.all(promises);
+
+      let myPokemonsArray = [];
+
+      // My created Pokemons - seulement au premier chargement
+      if (!add) {
+        try {
+          const myPokemonsResponse = await fetch(
+            `https://pokedex-c9ed6-default-rtdb.europe-west1.firebasedatabase.app/pokemons.json`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (myPokemonsResponse.ok) {
+            // On récupère les donnée de nos pokemon créer
+            const myPokemonsData = await myPokemonsResponse.json();
+
+            // Transform Data to pokeapi
+            if (myPokemonsData) {
+              for (const key in myPokemonsData) {
+                myPokemonsArray.push({
+                  id: key,
+                  ...myPokemonsData[key],
+                });
+              }
+            }
+          }
+        } catch (firebaseError) {
+          console.warn(
+            "Erreur lors du chargement des Pokémon personnalisés:",
+            firebaseError
+          );
+          // Continue sans les Pokémon personnalisés
+        }
+      }
+
+      console.log(myPokemonsArray);
+
+      // Mettre à jour l'état
+      if (add) {
+        setPokemons([...pokemons, ...pokemonDetails]);
+      } else {
+        setPokemons([...myPokemonsArray, ...pokemonDetails]);
+      }
+
+      setLoading(false);
+      toast(
+        add ? "Nouveaux Pokémons attrapés !" : "Premiers Pokémons attrapés !"
+      );
+    } catch (error) {
+      console.error("Erreur lors du chargement des Pokémon:", error);
+      setLoading(false);
+      toast.error("Une erreur est survenue lors du chargement des Pokémon !");
+    }
   };
 
   // Appeler fetchPokemons au chargement du composant

@@ -1,8 +1,13 @@
 import { useRef } from "react";
 import MakeForm from "../components/MakeForm/MakeForm";
+import { toast } from 'react-toastify'; 
+import { useNavigate } from 'react-router-dom'; 
 
 
 export default function CreatePokemon() {
+    // Variable 
+    const navigate = useNavigate(); 
+
     // Refs
     const name = useRef("");
     const height = useRef("");
@@ -85,7 +90,31 @@ export default function CreatePokemon() {
             }
         });
 
-        // Add to firebase realtime
+        // Add to firebase realtime : On fait une requette pour avoir un pokemon dans notre base de donnée Firebase //
+        const response = await fetch( 
+            "https://pokedex-c9ed6-default-rtdb.europe-west1.firebasedatabase.app/pokemons.json",
+            {
+                method:"POST", 
+                headers:{
+                    "Content-Type": "application/json", 
+                },
+                body: JSON.stringify(newPokemon), 
+            }
+        )
+        // Error 
+        if(!response.ok) {
+            toast.error("Une erreur est intervenu"); 
+            return; 
+        }
+
+        // Get the Id 
+        const { name: newPokemonName } = await response.json(); 
+        
+
+        // Redirect with react-router // 
+        navigate(`/pokemon/${newPokemonName}`); 
+
+
     };
 
     return (

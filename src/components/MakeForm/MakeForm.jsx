@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toast  } from 'react-toastify'; 
 
 export default function MakeForm({
     onFormSubmittedHandler,
@@ -65,7 +66,7 @@ export default function MakeForm({
         if (isValid) {
             onFormSubmittedHandler();
         } else {
-            // toastify.error('Merci de remplir le formulaire')...
+            toast.error('Merci de remplir le formulaire')
         }
     };
 
