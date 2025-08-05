@@ -1,4 +1,5 @@
 import Logo from "../components/Logo/Logo";
+import { Link } from 'react-router-dom'; 
 
 export default function Error() {
     return (
@@ -9,12 +10,12 @@ export default function Error() {
                 <span className="text-yellow-pokemon">Oups ! </span>Il
                 semblerait qu'un <b>Ronflex</b> ait bloqué le chemin...
             </p>
-            <a
-                href="/"
+            <Link
+                to="/"
                 className="inline-block mx-auto bg-yellow-pokemon hover:bg-yellow-100 duration-150 uppercase px-10 py-4 text-black font-semibold text-xl rounded-full mt-5"
             >
                 Retourner à l'accueil
-            </a>
+            </Link>
         </div>
     );
 }

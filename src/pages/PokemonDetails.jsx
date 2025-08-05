@@ -4,8 +4,15 @@ import { translateName } from "../utils/translateName";
 import Pokecard from "../components/Pokecard/Pokecard";
 import { createPortal } from "react-dom";
 import MakeForm from "../components/MakeForm/MakeForm";
+import { useParams } from "react-router-dom"; 
+import { toast } from "react-toastify";
 
 export default function PokemonDetails() {
+    //Variables 
+
+    const { id } = useParams(); 
+   
+
     // Refs
     const name = useRef("");
     const height = useRef("");
@@ -19,9 +26,38 @@ export default function PokemonDetails() {
     const image = useRef("");
     const types = useRef([]);
 
+    // States 
+
     const [pokemon, setPokemon] = useState([]);
     const [loading, setLoading] = useState(false);
     const [updatePokemon, setUpdatePokemon] = useState(false);
+    
+    // Modal 
+    useEffect(() => {
+        fetchPokemon()
+    },[])
+
+    //Function 
+    const fetchPokemon = async () => {
+        if(loading) return; 
+        setLoading(true); 
+
+        try {
+            const response = await fetch (`https://pokeapi.co/api/v2/pokemon/${id}`, {
+                method:"GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const data = await response.json(); 
+            setPokemon(data); 
+            setLoading(false); 
+        } catch (error) {
+            setLoading(false); 
+            toast.error('Une erreur est intervenu'); 
+
+        }
+    }
 
     // Modale
     useEffect(() => {
@@ -103,10 +139,11 @@ export default function PokemonDetails() {
     const onDeletePokemonHandler = async () => {
         // Delete
         if (window.confirm("Voulez-vous vraiment supprimer ce pokémon ?")) {
+            // TODO: Add delete logic here
         }
     };
 
-    if (loading || loadingPokemon)
+    if (loading)
         return <div className="text-center">Chargement...</div>;
 
     if (!pokemon || !pokemon.name)

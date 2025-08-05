@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import MakeForm from "../components/MakeForm/MakeForm";
 
+
 export default function CreatePokemon() {
     // Refs
     const name = useRef("");
@@ -89,6 +90,7 @@ export default function CreatePokemon() {
 
     return (
         <div>
+           
             <h1 className="text-3xl font-semibold text-center mb-10">
                 Créer un pokémon
             </h1>

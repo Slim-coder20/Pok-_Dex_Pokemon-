@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Nav() {
   return (
@@ -6,25 +6,47 @@ export default function Nav() {
       <div className="font-semibold text-xl rounded-full overflow-hidden">
         {/* Links */}
         <div className="flex">
-          <Link
+          {/* Home  */}
+          <NavLink
             to="/"
-            className="font-semibold px-10 py-5 bg-yellow-100 text-black hover:bg-orange-400 hover:text-black duration-150"
+            className={({ isActive }) =>
+              `font-semibold px-10 py-5  hover:text-black duration-150 ${
+                isActive
+                  ? "bg-yellow-100 text-black"
+                  : "bg-yellow-500 text-white"
+              }`
+            }
           >
             Accueil
-          </Link>
-          <Link
+          </NavLink>
+          {/* A propos  */}
+          <NavLink
             to="/about"
-            className="font-semibold px-10 py-5 bg-yellow-100 text-black  hover:bg-orange-400 hover:text-black duration-150"
+            className={({ isActive }) =>
+              `font-semibold px-10 py-5  hover:text-black duration-150 ${
+                isActive
+                  ? "bg-yellow-100 text-black"
+                  : "bg-yellow-500 text-white"
+              }`
+            }
           >
             {" "}
             À Propos
-          </Link>
-          <Link
+          </NavLink>
+
+          {/* Créer Pokemon  */}
+          <NavLink
             to="/create-pokemon"
-            className="font-semibold px-10 py-5 bg-yellow-100 text-black hover:bg-orange-400 hover:text-black duration-150"
+            className={({ isActive }) =>
+              `font-semibold px-10 py-5  hover:text-black duration-150 ${
+                isActive
+                  ? "bg-yellow-100 text-black"
+                  : "bg-yellow-500 text-white"
+              }`
+            }
           >
             Créer un pokémon
-          </Link>
+          </NavLink>
         </div>
       </div>
     </nav>
